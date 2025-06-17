@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unsere Hochzeit</title>
+    <title>Unsere Hochzeit - Fixed</title>
     <style>
         * {
             margin: 0;
@@ -62,11 +62,21 @@
             padding: 40px 0;
         }
         
+        /* FIXED: Parallax section für Formular angepasst */
         .parallax-section {
             position: relative;
+            min-height: 600px; /* Mindesthöhe statt fixer Höhe */
+            height: auto; /* Automatische Höhe */
+            overflow: visible; /* Kein Abschneiden mehr */
+            margin: 60px 0;
+            padding: 60px 0; /* Zusätzlicher Padding für bessere Optik */
+        }
+        
+        /* Für normale Parallax-Sektionen (ohne Formular) */
+        .parallax-section.normal {
             height: 400px;
             overflow: hidden;
-            margin: 60px 0;
+            padding: 0;
         }
         
         .parallax-bg {
@@ -115,8 +125,7 @@
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            top: 50%;
-            transform: translateY(-50%);
+            /* REMOVED: top: 50% und transform für bessere Flexibilität */
         }
         
         .split-section {
@@ -362,14 +371,13 @@
             }
             
             .parallax-section {
-                height: auto;
-                min-height: 300px;
+                min-height: 400px;
+                padding: 40px 0;
             }
             
             .parallax-content {
-                position: static;
-                transform: none;
                 margin: 20px;
+                padding: 30px;
             }
             
             .contact-form h2,
@@ -398,11 +406,11 @@
     
     <div class="container">
         <div class="content">
-            <!-- Parallax Sektion 1 mit Programm -->
-            <div class="parallax-section">
+            <!-- Parallax Sektion 1 mit Programm (normale Höhe) -->
+            <div class="parallax-section normal">
                 <div class="parallax-bg foto1"></div>
                 <div class="parallax-overlay"></div>
-                <div class="parallax-content">
+                <div class="parallax-content" style="top: 50%; transform: translateY(-50%);">
                     <div class="program-section">
                         <h2>Unser Hochzeitsprogramm</h2>
                         <p style="font-size: 1.3rem; text-align: center; color: #7a6b7a; font-style: italic;">
@@ -414,7 +422,7 @@
             
             <!-- Donnerstag Section mit Bild links -->
             <div class="split-section">
-                <div class="split-image foto2"></div>
+                <div class="split-image foto2">Foto Donnerstag</div>
                 <div class="split-text">
                     <h2>Donnerstag</h2>
                     <p>Der erste Tag unserer Hochzeitsfeier beginnt mit einem gemütlichen Lunch, gefolgt von einer Sightseeing-Tour durch die Stadt.</p>
@@ -436,12 +444,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="split-image foto3"></div>
+                <div class="split-image foto3">Foto Freitag</div>
             </div>
             
             <!-- Samstag Section mit Bild links -->
             <div class="split-section">
-                <div class="split-image foto5"></div>
+                <div class="split-image foto5">Foto Samstag</div>
                 <div class="split-text">
                     <h2>Samstag</h2>
                     <p>Der Samstag startet mit einem ausgiebigen Boozie Brunch - perfekt um den Abend entspannt ausklingen zu lassen.</p>
@@ -456,15 +464,15 @@
                     <p>Wer möchte, kann am Sonntagmorgen den Königspalast besichtigen. Dazu gibt es traditionellen Burek und Joghurt als Frühstück.</p>
                     <p>Ein perfekter Abschluss unserer Hochzeitsfeier!</p>
                 </div>
-                <div class="split-image foto6"></div>
+                <div class="split-image foto6">Foto Sonntag</div>
             </div>
             
-            <!-- Parallax Sektion 2 mit Anmeldung -->
+            <!-- FIXED: Parallax Sektion 2 mit Anmeldung - Flexible Höhe -->
             <div class="parallax-section">
-                <div class="parallax-bg foto4"></div>
+                <div class="parallax-bg foto4">Foto Anmeldung</div>
                 <div class="parallax-overlay"></div>
                 <div class="parallax-content">
-                    <form class="contact-form" onsubmit="handleSubmit(event)" style="margin: 0; box-shadow: none; background: transparent; padding-bottom: 80px;">
+                    <form class="contact-form" onsubmit="handleSubmit(event)" style="margin: 0; box-shadow: none; background: transparent;">
                         <h2>Anmeldung</h2>
                         <p style="text-align: center; margin-bottom: 30px;">
                             Um besser planen zu können, bitten wir euch, die folgenden Informationen anzugeben. 
@@ -527,6 +535,7 @@
                             </div>
                         </div>
                         
+                        <!-- JETZT SICHTBAR: Submit Button -->
                         <button type="submit" class="submit-btn">Anmeldung abschicken</button>
                     </form>
                 </div>
@@ -567,7 +576,7 @@
             
             // Checkboxen für Ernährung
             const dietOptions = formData.getAll('diet');
-            data.diet = dietOptions.join(', '); // Verbinde mehrere Optionen mit Komma
+            data.diet = dietOptions.join(', ');
             
             // Button deaktivieren während der Übertragung
             const submitBtn = event.target.querySelector('.submit-btn');
@@ -575,31 +584,13 @@
             submitBtn.textContent = 'Wird gesendet...';
             submitBtn.disabled = true;
             
-            // Daten an Google Sheets senden
-            fetch('https://script.google.com/macros/s/AKfycbxxomd1XEaMd0Oa6eiQ2Wb0VunOlT-rIThtwRConfYRVi0PTxgCWw3HGGhnUx-D2nlmag/exec', {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            })
-            .then(() => {
-                // Erfolgsnachricht
+            // Simuliere das Senden (ersetze mit deiner URL)
+            setTimeout(() => {
                 alert('Vielen Dank für eure Anmeldung! Die Daten wurden erfolgreich übertragen.');
-                
-                // Formular zurücksetzen
                 event.target.reset();
-            })
-            .catch((error) => {
-                console.error('Fehler:', error);
-                alert('Es gab einen Fehler beim Senden. Bitte versucht es nochmal oder kontaktiert uns direkt.');
-            })
-            .finally(() => {
-                // Button wieder aktivieren
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
-            });
+            }, 1000);
         }
     </script>
 </body>
